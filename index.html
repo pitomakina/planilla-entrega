@@ -9,7 +9,8 @@
     body { font-family: Arial; padding: 20px; background: #f0f0f0; }
     input { width: 80px; margin: 5px; }
     button { padding: 10px 20px; margin-top: 10px; }
-    .resultado { margin-top: 20px; font-weight: bold; }
+    .resultado { margin-top: 20px; font-weight: bold; background: #fff; padding: 15px; border-radius: 8px; }
+    .resultado p { margin: 5px 0; }
   </style>
 </head>
 <body>
@@ -36,20 +37,31 @@
       let local = parseInt(document.getElementById("local").value);
       let escolar = parseInt(document.getElementById("escolar").value);
       let petroleo = parseFloat(document.getElementById("petroleo").value);
-      let rangoMin = parseFloat(document.getElementById("rangoMin").value);
-      let rangoMax = parseFloat(document.getElementById("rangoMax").value);
 
-      let totalBruto = directo * 740 + cerro * 500 + local * 430 + escolar * 240;
-      let ajuste = (totalBruto * 0.21 - 8000) + petroleo;
-      let resultadoFinal = totalBruto - ajuste;
+      let totalDirecto = directo * 740;
+      let totalCerro = cerro * 500;
+      let totalLocal = local * 430;
+      let totalEscolar = escolar * 240;
 
-      let estado = (resultadoFinal >= rangoMin && resultadoFinal <= rangoMax) ? "✅ Dentro del rango" : "❌ Fuera del rango";
+      let totalBruto = totalDirecto + totalCerro + totalLocal + totalEscolar;
+      let ajuste21 = totalBruto * 0.21;
+      let ajusteFinal = (ajuste21 - 8000) + petroleo;
+      let resultadoFinal = totalBruto - ajusteFinal;
 
       document.getElementById("resultado").innerHTML = `
+        <p><strong>🧮 Detalle por grupo:</strong></p>
+        <p>DIRECTO (${directo} × 740): ${totalDirecto.toFixed(2)}</p>
+        <p>CERRO (${cerro} × 500): ${totalCerro.toFixed(2)}</p>
+        <p>LOCAL (${local} × 430): ${totalLocal.toFixed(2)}</p>
+        <p>ESCOLAR (${escolar} × 240): ${totalEscolar.toFixed(2)}</p>
+        <hr>
+        <p><strong>💡 Cálculos:</strong></p>
         <p>Total bruto: ${totalBruto.toFixed(2)}</p>
-        <p>Ajuste final (incluye PETRÓLEO): ${ajuste.toFixed(2)}</p>
-        <p>Resultado final: ${resultadoFinal.toFixed(2)}</p>
-        <p>${estado}</p>
+        <p>21% del total bruto: ${ajuste21.toFixed(2)}</p>
+        <p>Menos 8000: ${(ajuste21 - 8000).toFixed(2)}</p>
+        <p>+ PETRÓLEO (${petroleo}): ${ajusteFinal.toFixed(2)}</p>
+        <hr>
+        <p><strong>📊 Resultado final:</strong> ${resultadoFinal.toFixed(2)}</p>
       `;
     }
 
@@ -63,6 +75,11 @@
       document.getElementById("cerro").value = randomImpar(25, 45);
       document.getElementById("local").value = randomImpar(25, 45);
       document.getElementById("escolar").value = randomImpar(25, 35);
+      calcular();
+    }
+  </script>
+</body>
+</html>
       calcular();
     }
   </script>
