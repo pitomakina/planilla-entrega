@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>PLANILLA DE ENTREGA</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="icon.png" type="image/png">
+  <meta name="theme-color" content="#003366">
+  <style>
+    body { font-family: Arial; padding: 20px; background: #f0f0f0; }
+    input { width: 80px; margin: 5px; }
+    button { padding: 10px 20px; margin-top: 10px; }
+    .resultado { margin-top: 20px; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <h2>PLANILLA DE ENTREGA</h2>
+
+  <label>DIRECTO (65–75): <input type="number" id="directo" min="65" max="75" step="2" value="73"></label><br>
+  <label>CERRO: <input type="number" id="cerro" step="2" value="43"></label><br>
+  <label>LOCAL: <input type="number" id="local" step="2" value="37"></label><br>
+  <label>ESCOLAR: <input type="number" id="escolar" step="2" value="31"></label><br><br>
+
+  <label>💰 PETRÓLEO: <input type="number" id="petroleo" value="60000"></label><br>
+  <label>🎯 Rango mínimo: <input type="number" id="rangoMin" value="35000"></label>
+  <label>Rango máximo: <input type="number" id="rangoMax" value="36000"></label><br><br>
+
+  <button onclick="calcular()">Calcular</button>
+  <button onclick="generar()">Generar aleatorio</button>
+
+  <div class="resultado" id="resultado"></div>
+
+  <script>
+    function calcular() {
+      let directo = parseInt(document.getElementById("directo").value);
+      let cerro = parseInt(document.getElementById("cerro").value);
+      let local = parseInt(document.getElementById("local").value);
+      let escolar = parseInt(document.getElementById("escolar").value);
+      let petroleo = parseFloat(document.getElementById("petroleo").value);
+      let rangoMin = parseFloat(document.getElementById("rangoMin").value);
+      let rangoMax = parseFloat(document.getElementById("rangoMax").value);
+
+      let totalBruto = directo * 740 + cerro * 500 + local * 430 + escolar * 240;
+      let ajuste = (totalBruto * 0.21 - 8000) + petroleo;
+      let resultadoFinal = totalBruto - ajuste;
+
+      let estado = (resultadoFinal >= rangoMin && resultadoFinal <= rangoMax) ? "✅ Dentro del rango" : "❌ Fuera del rango";
+
+      document.getElementById("resultado").innerHTML = `
+        <p>Total bruto: ${totalBruto.toFixed(2)}</p>
+        <p>Ajuste final (incluye PETRÓLEO): ${ajuste.toFixed(2)}</p>
+        <p>Resultado final: ${resultadoFinal.toFixed(2)}</p>
+        <p>${estado}</p>
+      `;
+    }
+
+    function randomImpar(min, max) {
+      let n = Math.floor(Math.random() * ((max - min) / 2 + 1)) * 2 + min;
+      return n % 2 === 0 ? n + 1 : n;
+    }
+
+    function generar() {
+      document.getElementById("directo").value = randomImpar(65, 75);
+      document.getElementById("cerro").value = randomImpar(25, 45);
+      document.getElementById("local").value = randomImpar(25, 45);
+      document.getElementById("escolar").value = randomImpar(25, 35);
+      calcular();
+    }
+  </script>
+</body>
+</html>
